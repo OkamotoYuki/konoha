@@ -595,13 +595,6 @@ static KMETHOD Method_getCname(CTX, ksfp_t *sfp _RIX)
 	RETURN_(new_kString(cname, strlen(cname), 0));
 }
 
-//## Boolean Object.isNull();
-static KMETHOD Object_isNull(CTX, ksfp_t *sfp _RIX)
-{
-	kObject *o = sfp[0].o;
-	RETURNb_(IS_NULL(o));
-}
-
 //## Object System.knull(int type);
 static KMETHOD System_knull(CTX, ksfp_t *sfp _RIX)
 {
@@ -798,7 +791,6 @@ static kbool_t ijit_setupPackage(CTX, kNameSpace *ks, kline_t pline)
 		_Public, _F(Method_getReturnType), TY_Int, TY_Method, MN_("getReturnType"), 0,
 		_Public, _F(Method_getCname), TY_String, TY_Method, MN_("getCname"), 0,
 		_Public, _F(Method_getFname), TY_String, TY_Method, MN_("getFname"), 0,
-		_Public, _F(Object_isNull), TY_Boolean, TY_Object, MN_("isNull"), 0,
 		_Public|_Static, _F(System_knull), TY_Object, TY_System, MN_("knull"), 1, TY_Int, FN_x,
 		_Public, _F(Method_isStatic_), TY_Boolean, TY_Method, MN_("isStatic"), 0,
 		_Public, _F(Method_isVirtual_), TY_Boolean, TY_Method, MN_("isVirtual"), 0,
