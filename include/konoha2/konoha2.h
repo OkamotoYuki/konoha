@@ -373,8 +373,8 @@ struct _kObject;
 #define MOD_gc       1
 #define MOD_code     2
 #define MOD_sugar    3
-#define MOD_float   11
-//#define MOD_jit     12
+#define MOD_float        11
+#define MOD_iterator     12
 #define MOD_iconv   13
 //#define MOD_IO      14
 //#define MOD_llvm    15
@@ -471,7 +471,8 @@ typedef struct kshare_t {
 		const struct _kStmt              *stmt;\
 		const struct _kExpr              *expr;\
 		const struct _kBlock             *bk;\
-		struct _kGamma  *gma;\
+		struct _kGamma  *gma;   \
+		struct _kIterator *itr; \
 		struct kClass  *c; \
 		struct kDate *dt;\
 		struct kRegex  *re; \
@@ -1311,6 +1312,8 @@ struct _klib2 {
 #define kNameSpace_loadConstData(KS, DEF, UL)    (KPI)->KS_loadConstData(_ctx, KS, (const char**)&(DEF), UL)
 #define kNameSpace_getMethodNULL(KS, CID, MN)    (KPI)->KS_getMethodNULL(_ctx, KS, CID, MN)
 #define kNameSpace_syncMethods()    (KPI)->KS_syncMethods(_ctx)
+
+typedef intptr_t  KDEFINE_METHOD;
 
 typedef struct {
 	const char *key;

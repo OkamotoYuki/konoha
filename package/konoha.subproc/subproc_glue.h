@@ -1264,7 +1264,7 @@ static kbool_t subproc_initPackage(CTX, kNameSpace *ks, int argc, const char**ar
 	kclass_t *CT_StringArray2 = kClassTable_Generics(CT_Array, TY_String, 1, &ps);
 	kcid_t TY_StringArray = CT_StringArray2->cid;
 
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im, _F(Subproc_new), TY_Subproc, TY_Subproc,MN_("new"), 2, TY_String, FN_("path"), TY_Boolean, FN_("mode"),
 		_Public|_Const|_Im, _F(Subproc_fg), TY_Int, TY_Subproc, MN_("fg"), 0,
 		_Public|_Const|_Im, _F(Subproc_bg), TY_Boolean, TY_Subproc, MN_("bg"), 0,

@@ -498,7 +498,7 @@ static	kbool_t python_initPackage(CTX, kNameSpace *ks, int argc, const char**arg
 
 	kclass_t *cPython = Konoha_addClassDef(ks->packid, ks->packdom, NULL, &PythonDef, pline);
 	int TY_PyObject = cPython->cid;
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im|_Coercion, _F(PyObject_toBoolean), TY_Boolean, TY_PyObject, MN_to(TY_Boolean), 0,
 		_Public|_Const|_Im|_Coercion, _F(Boolean_toPyObject), TY_PyObject, TY_Boolean, MN_to(TY_PyObject), 0,
 		_Public|_Const|_Im|_Coercion, _F(PyObject_toInt), TY_Int, TY_PyObject, MN_to(TY_Int), 0,
@@ -553,7 +553,7 @@ static	kbool_t python_initPackage(CTX, kNameSpace *ks, int argc, const char**arg
 	};
 	kNameSpace_loadMethodData(ks, MethodData);
 	if(IS_defineFloat()) {
-		intptr_t MethodData[] = {
+		KDEFINE_METHOD MethodData[] = {
 			_Public|_Const|_Im|_Coercion, _F(PyObject_toFloat), TY_Float, TY_PyObject, MN_to(TY_Float), 0,
 			_Public|_Const|_Im|_Coercion, _F(Float_toPyObject), TY_PyObject, TY_Float, MN_to(TY_PyObject), 0,
 			DEND,

@@ -895,7 +895,7 @@ static kbool_t io_initPackage(CTX, kNameSpace *ks, int argc, const char**args, k
 	int FN_path = FN_("path");
 	int FN_mode = FN_("mode");
 	int FN_value = FN_("value");
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public, _F(InputStream_getByte),  TY_Int,         TY_InputStream,  MN_("getByte"), 0,
 		_Public, _F(InputStream_isClosed), TY_Boolean,     TY_InputStream,  MN_("isClosed"), 0,
 		_Public, _F(InputStream_new),      TY_InputStream, TY_InputStream,  MN_("new"), 2, TY_String, FN_path, TY_String, FN_mode,

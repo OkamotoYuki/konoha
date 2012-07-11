@@ -741,7 +741,7 @@ static kbool_t ijit_setupPackage(CTX, kNameSpace *ks, kline_t pline)
 	int FN_z = FN_("z");
 	int FN_w = FN_("w");
 
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Static, _F(System_setUline), TY_void, TY_System, MN_("setUline"), 1, TY_Int, FN_x,
 		_Public|_Static, _F(System_getUline), TY_Int,  TY_System, MN_("getUline"), 0,
 		_Public|_Static|_Coercion, _F(System_getValue), TY_Object, TY_System, MN_("getValue"), 1, TY_Int, FN_x,

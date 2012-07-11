@@ -101,7 +101,7 @@ static kbool_t openssl_initPackage(CTX, kNameSpace *ks, int argc, const char**ar
 	}
 
 	int FN_x = FN_("x");
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_P, _F(kMD5_Init),   TY_SHA1,   TY_MD5, MN_("new"), 0,
 		_P, _F(kMD5_Update), TY_Int,   TY_MD5, MN_("update"), 1, TY_String, FN_x,
 		_P, _F(kMD5_Final),  TY_String, TY_MD5, MN_("final"), 0,

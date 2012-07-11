@@ -410,7 +410,7 @@ static	kbool_t curl_initPackage(CTX, kNameSpace *ks, int argc, const char**args,
 	};
 	kclass_t *cCurl = Konoha_addClassDef(ks->packid, ks->packdom, NULL, &defCurl, pline);
 
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im, _F(Curl_new), TY_Curl, TY_Curl, MN_("new"), 0,
 		_Public|_Const|_Im, _F(Curl_setOpt), TY_void, TY_Curl, MN_("setOpt"), 2, TY_Int, FN_("type"), TY_Object/*FIXME TY_Dynamic*/, FN_("data"),
 		_Public|_Const|_Im, _F(Curl_appendHeader), TY_void, TY_Curl, MN_("appendHeader"), 1, TY_String, FN_("header"),

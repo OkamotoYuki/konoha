@@ -308,7 +308,7 @@ static kbool_t rope_initPackage(CTX, kNameSpace *ks, int argc, const char**args,
 		kMethod_setFunc(mtd, Rope_opADD);
 	} else {
 		int FN_x = FN_("x");
-		intptr_t MethodData[] = {
+		KDEFINE_METHOD MethodData[] = {
 			_Public|_Const, _F(Rope_opADD), TY_String, TY_String, MN_("opADD"), 1, TY_String, FN_x,
 			DEND
 		};

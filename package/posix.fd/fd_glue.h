@@ -331,7 +331,7 @@ static KMETHOD System_fsync(CTX, ksfp_t *sfp _RIX)
 
 static kbool_t fd_initPackage(CTX, kNameSpace *ks, int argc, const char**args, kline_t pline)
 {
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im, _F(System_lseek), TY_Int, TY_System, MN_("lseek"), 3, TY_Int, FN_("fd"), TY_Int, FN_("offset"), TY_Int, FN_("whence"),
 		_Public|_Const|_Im, _F(System_truncate), TY_Boolean, TY_System, MN_("truncate"), 2, TY_Int, FN_("fd"), TY_Int, FN_("length"),
 		_Public|_Const|_Im, _F(System_chmod), TY_Boolean, TY_System, MN_("chmod"), 2, TY_Int, FN_("fd"), TY_Int, FN_("length"),

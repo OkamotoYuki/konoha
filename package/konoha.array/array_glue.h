@@ -124,7 +124,7 @@ static KMETHOD Array_add1(CTX, ksfp_t *sfp _RIX)
 
 static	kbool_t array_initPackage(CTX, kNameSpace *ks, int argc, const char**args, kline_t pline)
 {
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Im, _F(Array_get), TY_T0,   TY_Array, MN_("get"), 1, TY_Int, FN_("index"),
 		_Public,     _F(Array_set), TY_void, TY_Array, MN_("set"), 2, TY_Int, FN_("index"),  TY_T0, FN_("value"),
 		_Public,     _F(Array_getSize), TY_Int, TY_Array, MN_("getSize"), 0,

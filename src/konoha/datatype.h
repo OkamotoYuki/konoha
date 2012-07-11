@@ -999,7 +999,7 @@ static void CLASSTABLE_free(CTX, kcontext_t *ctx)
 static void KCLASSTABLE_loadMethod(CTX)
 {
 	int FN_x = FN_("x");
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Immutable|_Const, _F(Object_toString), TY_String, TY_Object, MN_to(TY_String), 0,
 		_Public|_Immutable|_Const, _F(Boolean_opNOT), TY_Boolean, TY_Boolean, MN_("opNOT"), 0,
 		_Public|_Immutable|_Const, _F(Int_opNEQ), TY_Boolean, TY_Boolean, MN_("opNEQ"), 1, TY_Boolean, FN_x,

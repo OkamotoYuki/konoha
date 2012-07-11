@@ -218,7 +218,7 @@ static kbool_t file_initPackage(CTX, kNameSpace *ks, int argc, const char**args,
 	};
 
 	kclass_t *cFile = Konoha_addClassDef(ks->packid, ks->packdom, NULL, &defFile, pline);
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im, _F(System_fopen), TY_File, TY_System, MN_("fopen"), 2, TY_String, FN_("path"), TY_String, FN_("mode"),
 		_Public|_Const|_Im, _F(File_close), TY_void, TY_File, MN_("close"), 0,
 		_Public|_Const|_Im, _F(File_getC), TY_Int, TY_File, MN_("getC"), 0,
@@ -228,7 +228,7 @@ static kbool_t file_initPackage(CTX, kNameSpace *ks, int argc, const char**args,
 	kNameSpace_loadMethodData(ks, MethodData);
 	if (IS_defineBytes()) {
 		// the function below uses Bytes
-		intptr_t MethodData2[] = {
+		KDEFINE_METHOD MethodData2[] = {
 			_Public|_Const, _F(File_write), TY_Int, TY_File, MN_("write"), 3, TY_Bytes, FN_("buf"), TY_Int, FN_("offset"), TY_Int, FN_("len"),
 			_Public|_Const, _F(File_read), TY_Int, TY_File, MN_("read"), 3, TY_Bytes, FN_("buf"), TY_Int, FN_("offset"), TY_Int, FN_("len"),
 			DEND,

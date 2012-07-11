@@ -265,7 +265,7 @@ static	kbool_t sugar_initPackage(CTX, kNameSpace *ks, int argc, const char**args
 	int TY_FuncExprTyCheck = (kClassTable_Generics(CT_Func, TY_Expr, 4, P_FuncExprTyCheck))->cid;
 	//DBG_P("func=%s", TY_t(TY_FuncExprTyCheck));
 
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public, _F(Token_isTypeName), TY_Boolean, TY_Token, MN_("isTypeName"), 0,
 		_Public, _F(Token_isParenthesis), TY_Boolean, TY_Token, MN_("isParenthesis"), 0,
 

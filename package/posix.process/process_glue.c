@@ -140,7 +140,7 @@ static KMETHOD System_setgroups(CTX, ksfp_t *sfp _RIX)
 
 static	kbool_t process_initPackage(CTX, kNameSpace *ks, int argc, const char**args, kline_t pline)
 {
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Static, _F(System_getpid), TY_Int, TY_System, MN_("getpid"), 0,
 		_Public|_Static, _F(System_getppid), TY_Int, TY_System, MN_("getppid"), 0,
 		_Public|_Static, _F(System_getuid), TY_Int, TY_System, MN_("getuid"), 0,

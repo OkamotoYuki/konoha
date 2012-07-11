@@ -111,6 +111,7 @@ set(PACKAGES
 	konoha.string
 	konoha.bytes
 	konoha.array
+	konoha.iterator
 	konoha.hashmap
 	konoha.assignment
 	konoha.while

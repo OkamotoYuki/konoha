@@ -345,7 +345,7 @@ static kbool_t logpool_initPackage(CTX, kNameSpace *ks, int argc, const char**ar
 	int FN_x = FN_("x");
 	int FN_y = FN_("y");
 	int FN_z = FN_("z");
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_P|_C, _F(LogPool_new), TY_Logpool, TY_Logpool, MN_("new"), 2, TY_String, FN_x, TY_Int, FN_y,
 		_P|_C, _F(LogPool_get), TY_Log, TY_Logpool, MN_("get"), 0,
 		_P|_C, _F(Log_get_), TY_String, TY_Log, MN_("get"), 1, TY_String, FN_x,

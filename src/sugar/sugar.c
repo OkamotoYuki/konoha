@@ -632,7 +632,7 @@ KDEFINE_PACKAGE* konoha_init(void);
 
 void MODSUGAR_loadMethod(CTX)
 {
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 //		_Public, _F(NameSpace_importPackage_), TY_Boolean, TY_NameSpace, MN_("importPackage"), 1, TY_String, FN_pkgname,
 		_Public, _F(NameSpace_importPackage_), TY_Boolean, TY_NameSpace, MN_("import"), 1, TY_String, FN_("name"),
 		_Public, _F(NameSpace_loadScript_), TY_Boolean, TY_NameSpace, MN_("load"), 1, TY_String, FN_("path"),

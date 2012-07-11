@@ -36,7 +36,6 @@ extern "C" {
 
 /* ------------------------------------------------------------------------ */
 
-
 static KMETHOD Int_opLSHIFT (CTX, ksfp_t *sfp _RIX)
 {
 	int lshift = sfp[1].ivalue;
@@ -57,32 +56,32 @@ static KMETHOD Int_opRSHIFT (CTX, ksfp_t *sfp _RIX)
 #define _Coercion kMethod_Coercion
 #define _F(F)   (intptr_t)(F)
 
-static kbool_t int_initPackage(CTX, kNameSpace *ks, int argc, const char**args, kline_t pline)
+static kbool_t int_initPackage(CTX, kNameSpace *ns, int argc, const char**args, kline_t pline)
 {
 	int FN_x = FN_("x");
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im, _F(Int_opLSHIFT), TY_Int, TY_Int, MN_("opLSHIFT"), 1, TY_Int, FN_x,
 		_Public|_Const|_Im, _F(Int_opRSHIFT), TY_Int, TY_Int, MN_("opRSHIFT"), 1, TY_Int, FN_x,
 //		_Public|_Const|_Im, _F(Int_opINC), TY_Int, TY_Int, MN_("opINC"), 0,
 //		_Public|_Const|_Im, _F(Int_opDEC), TY_Int, TY_Int, MN_‘("opDEC"), 0,
 		DEND,
 	};
-	kNameSpace_loadMethodData(ks, MethodData);
+	kNameSpace_loadMethodData(ns, MethodData);
 	KDEFINE_INT_CONST IntData[] = {
 			{"INT_MAX", TY_Int, KINT_MAX},
 			{"INT_MIN", TY_Int, KINT_MIN},
 			{NULL},
 	};
-	kNameSpace_loadConstData(ks, IntData, pline);
+	kNameSpace_loadConstData(ns, IntData, pline);
 	return true;
 }
 
-static kbool_t int_setupPackage(CTX, kNameSpace *ks, kline_t pline)
+static kbool_t int_setupPackage(CTX, kNameSpace *ns, kline_t pline)
 {
 	return true;
 }
 
-static kbool_t int_initNameSpace(CTX,  kNameSpace *ks, kline_t pline)
+static kbool_t int_initNameSpace(CTX,  kNameSpace *ns, kline_t pline)
 {
 	USING_SUGAR;
 	KDEFINE_SYNTAX SYNTAX[] = {
@@ -92,14 +91,15 @@ static kbool_t int_initNameSpace(CTX,  kNameSpace *ks, kline_t pline)
 //			{ TOKEN("--"), _OP, .op1 = "opDEC", .priority_op2 = 16, .flag = SYNFLAG_ExprPostfixOp2,},
 			{ .kw = KW_END, },
 	};
-	SUGAR NameSpace_defineSyntax(_ctx, ks, SYNTAX);
+	SUGAR NameSpace_defineSyntax(_ctx, ns, SYNTAX);
 	return true;
 }
 
-static kbool_t int_setupNameSpace(CTX, kNameSpace *ks, kline_t pline)
+static kbool_t int_setupNameSpace(CTX, kNameSpace *ns, kline_t pline)
 {
 	return true;
 }
+
 #ifdef __cplusplus
 }
 #endif

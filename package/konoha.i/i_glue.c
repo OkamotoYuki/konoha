@@ -148,7 +148,7 @@ static	kbool_t i_initPackage(CTX, kNameSpace *ks, int argc, const char**args, kl
 	USING_SUGAR;
 	kclass_t *ct = kclass(TY_Method, pline);
 	KSET_CLASSFUNC(ct, p, Method, pline);
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public, _F(NameSpace_man), TY_void, TY_NameSpace, MN_("man"), 1, TY_Object, FN_("x") | FN_COERCION,
 		DEND,
 	};

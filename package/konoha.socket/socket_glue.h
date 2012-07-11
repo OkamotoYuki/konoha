@@ -626,7 +626,7 @@ static	kbool_t socket_initPackage(CTX, kNameSpace *ks, int argc, const char**arg
 	kclass_t *CT_IntArray = kClassTable_Generics(CT_Array, TY_Int, 1, &pi);
 	kcid_t TY_IntArray = CT_IntArray->cid;
 
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im, _F(System_accept), TY_Int, TY_System, MN_("accept"), 2, TY_Int, FN_("fd"), TY_SockAddr, FN_("sockaddr"),
 		_Public|_Const|_Im, _F(System_bind), TY_Int, TY_System, MN_("bind"), 4, TY_Int, FN_("fd"), TY_String, FN_("srcIP"), TY_Int, FN_("srcPort"), TY_Int, FN_("family"),
 		_Public|_Const|_Im, _F(System_close), TY_Int, TY_System, MN_("close"), 1, TY_Int, FN_("fd"),
@@ -646,7 +646,7 @@ static	kbool_t socket_initPackage(CTX, kNameSpace *ks, int argc, const char**arg
 	};
 	kNameSpace_loadMethodData(ks, MethodData);
 	if(IS_defineBytes()) {
-		intptr_t MethodData2[] = {
+		KDEFINE_METHOD MethodData2[] = {
 				_Public|_Const|_Im, _F(System_sendto), TY_Int, TY_System, MN_("sendto"), 6, TY_Int, FN_("socket"), TY_Bytes, FN_("msg"), TY_Int, FN_("flag"), TY_String, FN_("dstIP"), TY_Int, FN_("dstPort"), TY_Int, FN_("family"),
 				_Public|_Const|_Im, _F(System_recv), TY_Int, TY_System, MN_("recv"), 3, TY_Int, FN_("fd"), TY_Bytes, FN_("buf"), TY_Int, FN_("flags"),
 //				_Public|_Const|_Im, _F(System_recvfrom), TY_Int, TY_System, MN_("recvfrom"), 4, TY_Int, FN_x, TY_Bytes, FN_y, TY_Int, FN_z, TY_Map, FN_v,

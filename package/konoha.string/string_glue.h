@@ -368,7 +368,7 @@ static kbool_t string_initPackage(CTX, kNameSpace *ks, int argc, const char**arg
 {
 	int FN_s = FN_("s");
 	int FN_n = FN_("n");
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_Public|_Const|_Im, _F(String_opHAS),       TY_Boolean, TY_String, MN_("opHAS"), 1, TY_String, FN_s,
 		_Public|_Const|_Im, _F(String_trim),        TY_String, TY_String, MN_("trim"), 0,
 		_Public|_Const|_Im, _F(String_get),         TY_String, TY_String, MN_("get"), 1, TY_Int, FN_n,

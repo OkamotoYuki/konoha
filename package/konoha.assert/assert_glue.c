@@ -72,7 +72,7 @@
 //{
 //	USING_SUGAR;
 //	int FN_cond = FN_("cond");
-//	intptr_t MethodData[] = {
+//	KDEFINE_METHOD MethodData[] = {
 //		_Static|_Public, _F(NameSpace_assert), TY_Int, TY_NameSpace, MN_("assert"), 1, TY_Boolean, FN_cond,
 //		DEND,
 //	};

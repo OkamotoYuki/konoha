@@ -608,7 +608,7 @@ static kbool_t mpi_initPackage(CTX, kNameSpace *ks, int argc, const char**args, 
 #define TY_MPIRequest  (CT_MPIRequest->cid)
 #define TY_MPIData     (CT_MPIData->cid)
 #define TY_MPIOp       TY_Int //(CT_MPIOp->cid) // TODO
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		/* class MPI */
 		_Public|_Static, _F(MPI_getWtime), TY_Float, TY_MPI, MN_("getWtime"), 0,
 

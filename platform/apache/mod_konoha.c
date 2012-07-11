@@ -282,7 +282,7 @@ konoha_t konoha_create(kclass_t **cRequest)
 	kcid_t TY_TblEntryArray = CT_TblEntryArray->cid;
 
 	int FN_x = FN_("x");
-	intptr_t MethodData[] = {
+	KDEFINE_METHOD MethodData[] = {
 		_P, _F(Request_puts), TY_void, TY_Req, MN_("puts"), 1, TY_String, FN_x,
 		_P, _F(Request_getMethod), TY_String, TY_Req, MN_("getMethod"), 0,
 		_P, _F(Request_getArgs), TY_String, TY_Req, MN_("getArgs"), 0,

@@ -296,7 +296,7 @@ struct _kStmt {
 typedef const struct _kBlock kBlock;
 struct _kBlock {
 	kObjectHeader h;
-	kNameSpace        *ks;
+	kNameSpace          *ks;
 	kStmt               *parentNULL;
 	kArray              *blocks;
 	kExpr               *esp;
@@ -323,7 +323,7 @@ typedef struct {
 
 typedef struct gmabuf_t {
 	kflag_t  flag;    kflag_t  cflag;
-	kNameSpace     *ks;
+	kNameSpace        *ks;
 	kcid_t            this_cid;
 	kcid_t            static_cid;
 	kMethod*          mtd;
