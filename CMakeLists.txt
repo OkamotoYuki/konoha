@@ -129,13 +129,14 @@ set(PACKAGES
 	konoha.rope
 ##	konoha.subproc
 ##	konoha.mpi
-##	konoha.curl
+	curl
 	ijit
-##	jansson
+	jansson
 	python
 	apache
 	konoha.import
 #	openssl
+	logpool
 )
 
 find_library(HAVE_LIBDL NAMES dl)
