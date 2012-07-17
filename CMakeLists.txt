@@ -137,6 +137,7 @@ set(PACKAGES
 	konoha.import
 #	openssl
 	logpool
+	dse
 )
 
 find_library(HAVE_LIBDL NAMES dl)
