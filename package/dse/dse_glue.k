@@ -96,6 +96,7 @@ class DSEController {
 		while(true) {
 			if(total == taskSize) break;
 			log = lp.get();
+			p(log);
 			if(log.isNull()) break;
 			if(log.get("TraceID") != "task") continue;
 			i = 0;
@@ -115,12 +116,11 @@ class DSEController {
 
 	void sync(DSE[] dses) {
 		int i = 0;
-		p(dse[0].locks.getSize());
-		p(dse[0].tasks.getSize());
+		String[] locks;
 		while(i < dses.getSize()) {
+			locks = dses[i].locks;
 			dses[i].apply();
-			p(dse[i].locks[0]);
-			waitDTasks(dse[i].locks);
+			waitDTasks(locks);
 			i += 1;
 		}
 	}
