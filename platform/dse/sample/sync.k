@@ -1,4 +1,5 @@
 K.import("dse");
+//K.load("dse_glue.k");
 
 String makeFibo(int i) {
 	String fibo = "K.import(\"konoha\"); int fibo(int i) { if(i < 3) return i; else return fibo(i - 1) + fibo(i - 2); }; p(fibo(" + i + "));";
@@ -18,8 +19,8 @@ void main() {
 	DSE[] dses = new DSE[0];
 	dses.add(dse0);
 	dses.add(dse1);
-	DSEController.apply(dses);
-//	DSEController.sync(dses);
+//	DSEController.apply(dses);
+	DSEController.sync(dses);
 }
 
 main();
