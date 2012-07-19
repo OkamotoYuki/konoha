@@ -11,15 +11,15 @@ void main() {
 	String logpoolip = "0.0.0.0";
 	DSE dse0 = new DSE(host, port);
 	DSE dse1 = new DSE(host, port);
-	DTask t0 = new DTask(0, "test", 0, "eval", logpoolip, makeFibo(40));
-	DTask t1 = new DTask(1, "test", 1, "eval", logpoolip, makeFibo(1));
-	dse0.add(t0, true);
-	dse1.add(t1, false);
+	DTask task0 = new DTask(0, "test", 0, "eval", logpoolip, makeFibo(40));
+	DTask task1 = new DTask(1, "test", 1, "eval", logpoolip, makeFibo(1));
+	dse0.add(task0, true);
+	dse1.add(task1, false);
 	DSE[] dses = new DSE[0];
 	dses.add(dse0);
 	dses.add(dse1);
-//	DSEController.apply(dses);
-	DSEController.sync(dses);
+	DSEController.apply(dses);
+//	DSEController.sync(dses);
 }
 
 main();
