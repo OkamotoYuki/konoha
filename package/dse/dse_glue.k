@@ -91,7 +91,7 @@ class DSEController {
 
 		int total = 0;
 		LogPool lp = new LogPool("0.0.0.0", 14801);
-		lp.loadFile("dump", "query.k");
+		lp.loadFile("dump", "/usr/local/konoha2/package/dse/query.k");
 		Log log;
 		while(true) {
 			if(total == taskSize) break;

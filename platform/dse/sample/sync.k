@@ -18,8 +18,8 @@ void main() {
 	DSE[] dses = new DSE[0];
 	dses.add(dse0);
 	dses.add(dse1);
-	DSEController.apply(dses);
-//	DSEController.sync(dses);
+//	DSEController.apply(dses);
+	DSEController.sync(dses);
 }
 
 main();
