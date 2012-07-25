@@ -27,6 +27,8 @@
 #include <unistd.h>
 #include <signal.h>
 
+#define Int_to(T, a)      ((T)a.ivalue)
+
 //## @Static @Public Int System.getpid();
 
 static KMETHOD System_getpid(CTX, ksfp_t *sfp _RIX)
@@ -130,6 +132,22 @@ static KMETHOD System_setgroups(CTX, ksfp_t *sfp _RIX)
 	RETURNi_(ret);
 }
 
+//## @Native int System.sleep(int sec);
+static KMETHOD System_sleep(CTX, ksfp_t *sfp _RIX)
+{
+	//TODO: sleep it only accepts unsigned
+	unsigned int sec = Int_to(unsigned int, sfp[1]);
+	unsigned int left = sleep(sec);
+	RETURNi_(left);
+}
+
+//## @Native boolean System.usleep(int usec);
+static KMETHOD System_usleep(CTX, ksfp_t *sfp _RIX)
+{
+	int tf = (usleep(Int_to(useconds_t, sfp[1])) != -1);
+	RETURNb_(tf);
+}
+
 #define _Public   kMethod_Public
 #define _Const    kMethod_Const
 #define _Static   kMethod_Static
@@ -156,6 +174,8 @@ static	kbool_t process_initPackage(CTX, kNameSpace *ks, int argc, const char**ar
 		_Public|_Static, _F(System_setpriority), TY_Int, TY_System, MN_("setpriority"), 3, TY_Int, FN_("which"), TY_Int, FN_("who"), TY_Int, FN_("priority"),
 		_Public|_Static, _F(System_getgroups), TY_Int, TY_System, MN_("getgroups"), 2, TY_Int, FN_("size"), TY_Array, FN_("list[]"),
 		_Public|_Static, _F(System_setgroups), TY_Int, TY_System, MN_("setgroups"), 2, TY_Int, FN_("size"), TY_Array, FN_("*list"),
+		_Public|_Static, _F(System_sleep), TY_Int, TY_System, MN_("sleep"), 1, TY_Int, FN_("time"),
+		_Public|_Static, _F(System_usleep), TY_Boolean, TY_System, MN_("usleep"), 1, TY_Int, FN_("time"),
 		DEND,
 	};
 	kNameSpace_loadMethodData(ks, MethodData);
