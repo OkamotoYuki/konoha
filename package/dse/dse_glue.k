@@ -98,7 +98,7 @@ class DSEController {
 			log = lp.get();
 			p(log);
 			if(log.isNull()) break;
-			if(log.get("TraceID") != "task") continue;
+			if(log.get("TraceID") != "dtask") continue;
 			i = 0;
 			while(i < taskSize) {
 				if(isFinished[i]) {
