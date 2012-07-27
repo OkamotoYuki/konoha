@@ -4,6 +4,7 @@ K.import("logpool");
 K.import("konoha");
 K.import("konoha.bytes");
 K.import("posix.file");
+K.import("posix.process");
 
 class DTask {
 	int taskid;
@@ -84,6 +85,7 @@ class DSE {
 			c.appendHeader("Content-Type: application/json");
 			c.setOpt(CURLOPT_POSTFIELDS, req);
 			c.setOpt(CURLOPT_WRITEDATA, res);
+			p(System.getTime());
 			c.perform();
 			i += 1;
 		}

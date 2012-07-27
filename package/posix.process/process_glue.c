@@ -154,7 +154,7 @@ static KMETHOD System_getTime(CTX, ksfp_t *sfp _RIX)
 {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
-	RETURNi_(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	RETURNi_(((int)tv.tv_sec % 1000) * 1000 * 1000 + (int)tv.tv_usec);
 }
 
 #define _Public   kMethod_Public
