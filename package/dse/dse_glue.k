@@ -22,10 +22,10 @@ class DTask {
 		this.script = script;
 	}
 
-	String readFile(String filepath) {
+	void readFile(String filepath) {
 		FILE f = System.fopen(filepath, "r");
 		int bufsize = 32;
-		Bytes buf = Bytes.new(bufsize);
+		Bytes buf = new Bytes(bufsize);
 		int ret = bufsize;
 		String str = "";
 		while(ret == bufsize) {
@@ -38,7 +38,7 @@ class DTask {
 				str = str + buf.toString();
 			}
 		}
-		return str;
+		this.script = str;
 	}
 }
 
