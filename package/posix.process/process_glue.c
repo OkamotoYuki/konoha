@@ -26,6 +26,7 @@
 #include<konoha2/sugar.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sys/time.h>
 
 #define Int_to(T, a)      ((T)a.ivalue)
 
@@ -148,6 +149,14 @@ static KMETHOD System_usleep(CTX, ksfp_t *sfp _RIX)
 	RETURNb_(tf);
 }
 
+//## @Native int System.getTime();
+static KMETHOD System_getTime(CTX, ksfp_t *sfp _RIX)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	RETURNi_(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
 #define _Public   kMethod_Public
 #define _Const    kMethod_Const
 #define _Static   kMethod_Static
@@ -176,6 +185,7 @@ static	kbool_t process_initPackage(CTX, kNameSpace *ks, int argc, const char**ar
 		_Public|_Static, _F(System_setgroups), TY_Int, TY_System, MN_("setgroups"), 2, TY_Int, FN_("size"), TY_Array, FN_("*list"),
 		_Public|_Static, _F(System_sleep), TY_Int, TY_System, MN_("sleep"), 1, TY_Int, FN_("time"),
 		_Public|_Static, _F(System_usleep), TY_Boolean, TY_System, MN_("usleep"), 1, TY_Int, FN_("time"),
+		_Public|_Static, _F(System_getTime), TY_Int, TY_System, MN_("getTime"), 0,
 		DEND,
 	};
 	kNameSpace_loadMethodData(ks, MethodData);
