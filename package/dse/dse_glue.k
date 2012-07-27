@@ -2,6 +2,8 @@ K.import("jansson");
 K.import("curl");
 K.import("logpool");
 K.import("konoha");
+K.import("konoha.bytes");
+K.import("posix.file");
 
 class DTask {
 	int taskid;
@@ -10,7 +12,6 @@ class DTask {
 	String method;
 	String logpool;
 	String script;
-	Json jdata;
 
 	DTask(int taskid, String type, int context, String method, String logpool, String script) {
 		this.taskid = taskid;
@@ -19,13 +20,25 @@ class DTask {
 		this.method = method;
 		this.logpool = logpool;
 		this.script = script;
-		this.jdata = new Json();
-		this.jdata.setString("taskid", this.taskid + ""); // TODO setInt();
-		this.jdata.setString("type", this.type);
-		this.jdata.setString("context", this.context + ""); // TODO setInt();
-		this.jdata.setString("method", this.method);
-		this.jdata.setString("logpool", this.logpool);
-		this.jdata.setString("script", this.script);
+	}
+
+	String readFile(String filepath) {
+		FILE f = System.fopen(filepath, "r");
+		int bufsize = 32;
+		Bytes buf = Bytes.new(bufsize);
+		int ret = bufsize;
+		String str = "";
+		while(ret == bufsize) {
+			buf.setAll(0); // zero clear
+			ret = f.read(buf, 0, bufsize);
+			if (ret < bufsize) {
+				String tmp = buf.toString();
+				str = str + tmp;
+			} else {
+				str = str + buf.toString();
+			}
+		}
+		return str;
 	}
 }
 
@@ -53,11 +66,19 @@ class DSE {
 
 	void apply() {
 		Curl c;
+		Json jdata;
 		String req;
 		String res;
 		int i = 0;
 		while(i < this.tasks.getSize()) {
-			req = this.tasks[i].jdata.dump();
+			jdata = new Json();
+			jdata.setString("taskid", this.tasks[i].taskid + ""); // TODO setInt();
+			jdata.setString("type", this.tasks[i].type);
+			jdata.setString("context", this.tasks[i].context + ""); // TODO setInt();
+			jdata.setString("method", this.tasks[i].method);
+			jdata.setString("logpool", this.tasks[i].logpool);
+			jdata.setString("script", this.tasks[i].script);
+			req = jdata.dump();
 			c = new Curl();
 			c.setOpt(CURLOPT_URL, url);
 			c.appendHeader("Content-Type: application/json");
