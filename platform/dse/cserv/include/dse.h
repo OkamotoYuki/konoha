@@ -26,82 +26,28 @@
 #ifndef DSE_H_
 #define DSE_H_
 
+#include <stdbool.h>
+#include <unistd.h>
 #include <event.h>
 #include <evhttp.h>
 #include <event2/buffer.h>
 #include <sys/queue.h>
-//#include <actor/actor.h>
+#include <sys/wait.h>
 #include <jansson.h>
-#include <konoha2/konoha2.h>
-#include "dse_util.h"
-#include "dse_logger.h"
-#include "dse_platform.h"
+#include "util.h"
+#include "logger.h"
+#include "protocol.h"
+#include "scheduler.h"
+
+struct dDserv;
+
+extern struct dDserv *gdserv;
 
 struct dDserv {
 	struct event_base *base;
 	struct evhttp *httpd;
+	struct dScheduler *dscd;
 };
-
-struct dReq {
-	int method;
-	int context;
-	int taskid;
-	char logpoolip[16];
-	char *scriptfilepath;
-};
-
-struct dRes {
-	int taskid;
-	int status;
-	char *status_symbol;
-	char *status_detail;
-};
-
-enum {
-	E_METHOD_EVAL,
-	E_METHOD_TYCHECK,
-	E_STATUS_OK,
-};
-
-#define DSE_FILEPATH_SIZE 128
-
-static struct dReq *newDReq()
-{
-	struct dReq *ret = (struct dReq *)malloc(sizeof(struct dReq));
-	ret->method = 0;
-	ret->context = 0;
-	ret->taskid = 0;
-	memset(ret->logpoolip, 16, 0);
-	ret->scriptfilepath = (char*)dse_malloc(DSE_FILEPATH_SIZE);
-	memset(ret->scriptfilepath, 128, 0);
-	return ret;
-}
-
-static void deleteDReq(struct dReq *req)
-{
-	if (req == NULL) return;
-	dse_free(req->scriptfilepath, DSE_FILEPATH_SIZE);
-	dse_free(req, sizeof(struct dReq));
-}
-
-static struct dRes *newDRes()
-{
-	struct dRes *ret = (struct dRes *)dse_malloc(sizeof(struct dRes));
-	ret->taskid = 0;
-	ret->status = 0;
-	ret->status_detail = NULL;
-	ret->status_symbol = NULL;
-	return ret;
-}
-
-static void deleteDRes (struct dRes *res)
-{
-	// check if satus_* is set
-	if (res == NULL) return;
-	dse_free(res, sizeof(struct dRes));
-}
-
-/* ************************************************************************ */
 
 #define JSON_INITGET(O, K) \
 	json_t *K = json_object_get(O, #K)
@@ -116,8 +62,8 @@ static struct dReq *dse_parseJson(const char *input)
 		D_("error occurs");
 		return NULL;
 	}
-	JSON_INITGET(root, taskid);
-	JSON_INITGET(root, type);
+//	JSON_INITGET(root, taskid);
+//	JSON_INITGET(root, type);
 	JSON_INITGET(root, context);
 	JSON_INITGET(root, method);
 	JSON_INITGET(root, logpool);
@@ -146,110 +92,23 @@ static struct dReq *dse_parseJson(const char *input)
 	strncpy(filename, str_context, context_len);
 	snprintf(filename, context_len+3, "%s.k", str_context);
 	FILE *fp = fopen(filename, "w");
-	char *str_script= json_string_value(script);
+	char *str_script = (char *)json_string_value(script);
 	// replace "'" --> "\"";
 	size_t script_len = strlen(str_script);
-	char ch;
-	int idx = 0;
-	for (idx = 0; idx < script_len; idx++) {
-		if (str_script[idx] == '\'') {
-			str_script[idx] ='"';
-		} else if (str_script[idx] == '@') {
-			str_script[idx] = '\n';
-		}
-
-	}
+//	char ch;
+//	int idx = 0;
+//	for (idx = 0; idx < script_len; idx++) {
+//		if (str_script[idx] == '\'') {
+//			str_script[idx] ='"';
+//		} else if (str_script[idx] == '@') {
+//			str_script[idx] = '\n';
+//		}
+//	}
 	fwrite(str_script, script_len, 1, fp);
 	fflush(fp);
 	fclose(fp);
 	json_decref(root);
 	return ret;
-}
-
-//static void eval_actor_init(Actor *a) { /* do nothing */ }
-//static void eval_actor_exit(Actor *a) { /* do nothing */ }
-//
-//static int eval_actor_act(Actor *a, Message *message)
-//{
-//	if (JSON_type(message) == JSON_String) {
-//		char *filepath = JSONString_get(a->self, 6);
-//		filepath[5] = '\0';
-//		konoha_t konoha = konoha_open();
-//		int ret = konoha_load(konoha, filepath);
-//		konoha_close(konoha);
-//	}
-//	return 0;
-//}
-//
-//static const struct actor_api eval_actor_api = {
-//	eval_actor_act,
-//	eval_actor_init,
-//	eval_actor_exit
-//};
-//
-//static void eval_actor(struct dReq *req)
-//{
-//	if (ActorStage_init(1, 1)) {
-//		D_("ActorStageinit, failed");
-//	}
-//
-//	JSON message = JSONInt_new(1);
-//	Actor *a = Actor_new(message, &eval_actor_api);
-//	Actor_act(a);
-//	Actor_send(a, JSONString_new(req->scriptfilepath, strlen(req->scriptfilepath)));
-//}
-
-#define LOGSIZE 256
-
-static struct dRes *dse_dispatch(struct dReq *req)
-{
-	kplatform_t *dse = platform_dse();
-	konoha_t konoha = konoha_open((const kplatform_t *)dse);
-	logpool_t *lp;
-	void *logpool_args;
-	int ret;
-	D_("scriptpath:%s", req->scriptfilepath);
-	struct dRes *dres = newDRes();
-	switch (req->method){
-		case E_METHOD_EVAL: case E_METHOD_TYCHECK:
-			lp = dse_openlog(req->logpoolip);
-			dse_record(lp, &logpool_args, "task",
-					KEYVALUE_u("context", req->context),
-					KEYVALUE_s("status", "startting"),
-					LOG_END);
-			ret = konoha_load(konoha, req->scriptfilepath);
-			dse_record(lp, &logpool_args, "task",
-					KEYVALUE_u("context", req->context),
-					KEYVALUE_s("status", "done"),
-					LOG_END);
-
-			dse_closelog(lp);
-			//		eval_actor(req);
-			if(ret == 1) {
-				// ok;
-				dres->status = E_STATUS_OK;
-			}
-			break;
-			//case E_METHOD_TYCHECK:
-			//	break;
-		default:
-			D_("there's no such method");
-			break;
-	}
-	konoha_close(konoha);
-	return dres;
-}
-
-static void dse_send_reply(struct evhttp_request *req, struct dRes *dres)
-{
-	struct evbuffer *buf = evbuffer_new();
-	switch(dres->status){
-		case E_STATUS_OK:
-			evhttp_send_reply(req, HTTP_OK, "OK", buf);
-			break;
-		default:
-			break;
-	}
 }
 
 /* ************************************************************************ */
@@ -268,13 +127,27 @@ void dump_http_header(struct evhttp_request *req, struct evbuffer *evb, void *ct
 	evhttp_send_reply(req, HTTP_OK, "OK", evb);
 }
 
+static void *dse_dispatch(void *arg);
+
+#define THREAD_SIZE 8
+
 // request handler for DSE Protocol
-void dse_req_handler (struct evhttp_request *req, void *arg)
+void dse_req_handler(struct evhttp_request *req, void *arg)
 {
 	struct evbuffer *body = evhttp_request_get_input_buffer(req);
 	size_t len = evbuffer_get_length(body);
+	struct dScheduler *dscd = (struct dScheduler *)arg;
 	struct dReq *dreq = NULL;
-	struct dRes *dres = NULL;
+//	struct dRes *dres = NULL;
+	static bool isFirst = true;
+	static pthread_t thread_pool[THREAD_SIZE];
+	int i;
+	if(isFirst) {
+		for(i = 0; i < THREAD_SIZE; i++) {
+			pthread_create(&thread_pool[i], NULL, dse_dispatch, arg);
+		}
+		isFirst = false;
+	}
 	if (req->type == EVHTTP_REQ_GET) {
 		evhttp_send_error(req, HTTP_BADREQUEST, "DSE server doesn't accept GET request");
 	} else if(req->type == EVHTTP_REQ_POST) {
@@ -284,17 +157,22 @@ void dse_req_handler (struct evhttp_request *req, void *arg)
 		requestLine[len] = '\0';
 		//now, parse json.
 		dreq = dse_parseJson((const char*)requestLine);
-		dres = dse_dispatch(dreq);
-		dse_send_reply(req, dres);
-		//evbuffer_add_printf(buf, "Reqested POSPOS: %s\n", evhttp_request_uri(req));
-		//evhttp_send_reply(req, HTTP_OK, "OK", buf);
-
+		dreq->req = req;
+		pthread_mutex_lock(&dscd->lock);
+		if(dse_enqueue(dscd, dreq)) {
+			pthread_mutex_unlock(&dscd->lock);
+			pthread_cond_signal(&dscd->cond);
+			struct evbuffer *buf = evbuffer_new();   // FIXME
+			evhttp_send_reply(req, HTTP_OK, "OK", buf);
+			evbuffer_free(buf);
+			return;
+		}
+		pthread_mutex_unlock(&dscd->lock);
+		evhttp_send_error(req, HTTP_BADREQUEST, "DSE server's request queue is full");
 	}
 	else{
 		evhttp_send_error(req, HTTP_BADREQUEST, "Available POST only");
 	}
-	deleteDReq(dreq);
-	deleteDRes(dres);
 }
 
 static struct dDserv *dserv_new(void)
@@ -302,6 +180,7 @@ static struct dDserv *dserv_new(void)
 	struct dDserv *dserv = dse_malloc(sizeof(struct dDserv));
 	dserv->base = event_base_new();
 	dserv->httpd = evhttp_new(dserv->base);
+	dserv->dscd = newDScheduler();
 	return dserv;
 }
 
@@ -311,8 +190,7 @@ static int dserv_start(struct dDserv *dserv, const char *addr, int ip)
 		perror("evhttp_bind_socket");
 		exit(EXIT_FAILURE);
 	}
-	evhttp_set_gencb(dserv->httpd, dse_req_handler, NULL);
-
+	evhttp_set_gencb(dserv->httpd, dse_req_handler, (void *)dserv->dscd);
 	event_base_dispatch(dserv->base);
 	return 0;
 }
@@ -321,7 +199,102 @@ static void dserv_close(struct dDserv *dserv)
 {
 	evhttp_free(dserv->httpd);
 	event_base_free(dserv->base);
+	deleteDScheduler(dserv->dscd);
 	dse_free(dserv, sizeof(struct dDserv));
+}
+
+//static void dse_send_reply(struct evhttp_request *req, struct dRes *dres)
+//{
+//	struct evbuffer *buf = evbuffer_new();
+//	switch(dres->status){
+//		case E_STATUS_OK:
+//			evhttp_send_reply(req, HTTP_OK, "OK", buf);
+//			break;
+//		default:
+//			evhttp_send_reply(req, HTTP_OK, "FAIL", buf);
+//			break;
+//	}
+//	evbuffer_free(buf);
+//}
+
+static void *dse_dispatch(void *arg)
+{
+	struct dScheduler *dscd = (struct dScheduler *)arg;
+	struct dReq *dreq;
+	struct dRes *dres;
+	char cmd_konoha[] = "konoha";
+	char cmd_opt_tycheck[] = "-c";
+	char cmd_sh[] = "sh";
+	pid_t pid;
+	int status = 0;
+	logpool_t *lp;
+	void *logpool_args;
+	while(true) {
+		pthread_mutex_lock(&dscd->lock);
+		if(!(dreq = dse_dequeue(dscd))) {
+			pthread_cond_wait(&dscd->cond, &dscd->lock);
+			dreq = dse_dequeue(dscd);
+		}
+		pthread_mutex_unlock(&dscd->lock);
+		D_("scriptpath:%s", dreq->scriptfilepath);
+		dres = newDRes();
+		pid = fork();
+		switch(pid) {
+			case -1:
+				dserv_close(gdserv);
+				D_("error in fork()");
+				exit(1);
+			case 0:
+				switch (dreq->method){
+					case E_METHOD_EVAL: case E_METHOD_TYCHECK:
+						lp = dse_openlog(dreq->logpoolip);
+						dse_record(lp, &logpool_args, "dtask",
+								KEYVALUE_u("context", dreq->context),
+								KEYVALUE_s("status", "start"),
+								KEYVALUE_u("pid", getpid()),
+								LOG_END);
+						execlp(cmd_konoha, cmd_konoha, dreq->scriptfilepath, NULL);
+						dse_record(lp, &logpool_args, "dtask",
+								KEYVALUE_u("context", dreq->context),
+								KEYVALUE_s("status", "failed"),
+								LOG_END);
+						dse_closelog(lp);
+//						if(ret == 1) {
+						// ok;
+//							dres->status = E_STATUS_OK;
+//						}
+						break;
+						//case E_METHOD_TYCHECK:
+						//	break;
+					default:
+						D_("there's no such method");
+						break;
+				}
+//				dse_send_reply(dreq->req, dres);
+				deleteDReq(dreq);
+				deleteDRes(dres);
+				exit(1);
+			default:
+				D_("pid: %d", pid);
+				waitpid(pid, &status, 0);
+				lp = dse_openlog(dreq->logpoolip);
+				if(WIFEXITED(status)) {
+					dse_record(lp, &logpool_args, "dtask",
+							KEYVALUE_u("context", dreq->context),
+							KEYVALUE_s("status", "done"),
+							KEYVALUE_u("exit status", WEXITSTATUS(status)),
+							LOG_END);
+				} else {
+					dse_record(lp, &logpool_args, "dtask",
+							KEYVALUE_u("context", dreq->context),
+							KEYVALUE_s("status", "failed"),
+							KEYVALUE_u("exit status", WEXITSTATUS(status)),
+							LOG_END);
+				}
+				dse_closelog(lp);
+				break;
+		}
+	}
 }
 
 #endif /* DSE_H_ */
